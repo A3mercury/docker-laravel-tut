@@ -3,8 +3,8 @@ services:
   app:
     build:
      args:
-       user: austinandrews-m1
-       uid: 501
+       user: aandrews
+       uid: 1000
       context: ./
       dockerfile: Dockerfile
     image: landing-app
