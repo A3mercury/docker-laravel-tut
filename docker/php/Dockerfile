@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:8-fpm-bullseye
 
 # Arguments defined in docker-compose.yml
 ARG user
@@ -8,7 +8,10 @@ ENV PHPGROUP=$user
 ENV PHPUSER=$user
 ENV PHPUID=$uid
 
-# Install system dependencies
+COPY composer.lock composer.json /var/www
+
+WORKDIR /var/www
+
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -32,14 +35,5 @@ RUN adduser -g ${PHPGROUP} -s /bin/sh -D ${PHPUSER}
 
 RUN sed -i "s/user = www-data/user = ${PHPUSER}/g" /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/www.conf
-
-
-
-# RUN useradd -G www-data,root -u $uid -d /home/$user $user
-# RUN mkdir -p /home/$user/.composer && \
-#     chown -R $user:$user /home/$user
-
-# Set working directory
-WORKDIR /var/www
 
 USER $user
